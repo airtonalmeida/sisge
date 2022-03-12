@@ -1,0 +1,104 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets" template="/template/main.xhtml">
+
+	<ui:define name="body">
+		<h:form prependId="false">
+					
+			<p:fieldset legend="#{messages['evento.label']}" toggleable="true" toggleSpeed="500">
+				<h:panelGrid id="fieldsevento" columns="3">
+										
+					<h:outputLabel value="Descrição: " for="descricao" styleClass="text-input" />
+					
+					<h:inputText id="descricao" value="#{eventoEditMB.bean.descricao}"
+						title="#{messages['evento.alt.descricao']}" size="60" />
+					
+					<p:message for="descricao" />
+						
+					<h:outputLabel value="#{messages['evento.label.abreviatura']}: " for="abreviatura" styleClass="text-input" />
+					
+					<h:inputText id="abreviatura" value="#{eventoEditMB.bean.abreviatura}"
+						title="#{messages['evento.alt.abreviatura']}" size="60" />
+					
+					<p:message for="abreviatura" />
+										
+					<h:outputLabel value="Responsável: " for="responsavel" styleClass="text-input" />
+				  
+					<p:autoComplete id="responsavel" forceSelection="true" dropdown="true" value="#{eventoEditMB.bean.responsavel}" 
+					var="responsavel" itemLabel="#{responsavel.nome}" itemValue="#{responsavel}" completeMethod="#{eventoEditMB.completeText}" converter="ConversorResponsavel" size="54" />
+					<p:message for="responsavel" />	
+					
+					<h:outputLabel value="#{messages['evento.label.local']}: " for="local" styleClass="text-input" />
+					
+					<h:inputText id="local" value="#{eventoEditMB.bean.local}"
+						title="#{messages['evento.alt.local']}" size="60" />
+					
+					<p:message for="local" />
+						
+					<h:outputLabel value="#{messages['evento.label.dataInicial']}: " for="dataInicial" styleClass="text-input" />
+					
+					<p:calendar id="dataInicial" value="#{eventoEditMB.bean.dataInicial}"
+					   pattern="#{messages['label.date.pattern']}" navigator="true" showButtonPanel="true"
+					   locale="#{locales.currentLocale}" title="#{messages['evento.alt.dataInicial']}" timeZone="#{initParam.timezone}" />
+							 
+					<p:message for="dataInicial" />
+						
+					<h:outputLabel value="#{messages['evento.label.dataFinal']}: " for="dataFinal" styleClass="text-input" />
+					
+					<p:calendar id="dataFinal" value="#{eventoEditMB.bean.dataFinal}"
+					   pattern="#{messages['label.date.pattern']}" navigator="true" showButtonPanel="true"
+					   locale="#{locales.currentLocale}" title="#{messages['evento.alt.dataFinal']}" timeZone="#{initParam.timezone}" />
+							 
+					<p:message for="dataFinal" />
+									
+					<h:outputLabel value="#{messages['evento.label.custoEstimado']}: " for="custoEstimado" styleClass="text-input" />
+					
+					<h:inputText id="custoEstimado" value="#{eventoEditMB.bean.custoEstimado}"
+						title="#{messages['evento.alt.custoEstimado']}" />	
+						
+					<p:message for="custoEstimado" />	
+					
+					<h:outputLabel value="#{messages['evento.label.formaDeCusteio']}:"  for="formaDeCusteio"  />
+					
+			        <p:selectOneRadio id="formaDeCusteio" value="#{eventoEditMB.bean.formaDeCusteio}">
+			            <f:selectItem itemLabel="Caixa da Igreja" itemValue="Caixa da Igreja" />
+			            <f:selectItem itemLabel="Caixa do Evento" itemValue="Caixa do Evento" />
+			            <f:selectItem itemLabel="Caixa da Igreja e Caixa do Evento" itemValue="Caixa da Igreja e Caixa do Evento" />
+			            <f:selectItem itemLabel="Outros" itemValue="Outros" />
+			        </p:selectOneRadio>	
+			        
+			        <p:message for="formaDeCusteio" />					  
+								 
+					<h:outputLabel value="Observação: " for="observacao" styleClass="text-input" />
+					
+					<p:inputTextarea rows="5" cols="60" counter="display" maxlength="1000" counterTemplate="{0} caracteres restantes." id="observacao" value="#{eventoEditMB.bean.observacao}"
+						title="#{messages['evento.alt.observacao']}" />
+					<h:outputText id="display" />
+					<p:message for="observacao" />
+						
+				</h:panelGrid>
+			</p:fieldset>
+			
+			<br />
+			
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{messages['button.save']}" action="#{eventoEditMB.insert}"
+						rendered="#{!eventoEditMB.updateMode}" ajax="false" />
+					<p:commandButton value="#{messages['button.save']}" action="#{eventoEditMB.update}"
+						rendered="#{eventoEditMB.updateMode}" ajax="false" />
+					<p:commandButton value="#{messages['button.delete']}" onclick="confirmation.show()"
+						rendered="#{eventoEditMB.updateMode}" type="button" immediate="true" ajax="false" />
+					<p:confirmDialog message="#{messages['label.confirm.delete']}" showEffect="bounce" hideEffect="explode"
+						header="#{messages['label.dialog.delete']}" severity="alert" widgetVar="confirmation">
+						<h:commandButton value="#{messages['button.dialog.yes']}" action="#{eventoEditMB.delete}" immediate="true"
+							ajax="false" />
+						<h:commandButton value="#{messages['button.dialog.no']}" onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+				</p:toolbarGroup>
+			</p:toolbar>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

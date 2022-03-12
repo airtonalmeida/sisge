@@ -1,0 +1,79 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets" template="/template/main.xhtml">
+
+	<ui:define name="body">
+		<h:form>
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton title="#{messages['button.new']}" icon="ui-icon-document" action="#{eventoListMB.getNextView}"
+						actionListener="#{eventoListMB.clear}" ajax="false" />
+
+					<p:commandButton title="#{messages['button.delete']}" icon="ui-icon-trash" onclick="PF('confirmation').show();"
+						type="button" immediate="true" ajax="false" />
+
+					<p:confirmDialog message="#{messages['label.confirm.delete']}" 
+						header="#{messages['label.dialog.alert']}!" severity="alert" widgetVar="confirmation">
+
+						<h:commandButton value="#{messages['button.dialog.yes']}" action="#{eventoListMB.deleteSelection}"
+							actionListener="#{eventoListMB.clear}" />
+						<h:commandButton value="#{messages['button.dialog.no']}" onclick="PF('confirmation').hide();" type="button" />
+					</p:confirmDialog>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable id="list" var="bean" value="#{eventoListMB.resultList}" emptyMessage=" ">
+				<f:facet name="header">#{messages['evento.list.table.title']}</f:facet>
+				<p:column style="width:2%;">
+					<h:selectBooleanCheckbox value="#{eventoListMB.selection[bean.id]}"></h:selectBooleanCheckbox>
+				</p:column>
+											
+				<p:column sortBy="#{bean.descricao}">
+					<f:facet name="header">#{"Descrição"}</f:facet>
+					<h:commandLink action="#{eventoListMB.getNextView}" actionListener="#{eventoListMB.clear}">
+						<h:outputText value="#{bean.descricao}" />
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>
+					
+				<p:column sortBy="#{bean.abreviatura}">
+					<f:facet name="header">#{messages['evento.label.abreviatura']}</f:facet>
+					<h:commandLink action="#{eventoListMB.getNextView}" actionListener="#{eventoListMB.clear}">
+						<h:outputText value="#{bean.abreviatura}" />
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>
+									
+				<p:column sortBy="#{bean.dataInicial}">
+					<f:facet name="header">#{messages['evento.label.dataInicial']}</f:facet>
+					<h:commandLink action="#{eventoListMB.getNextView}" actionListener="#{eventoListMB.clear}">
+						<h:outputText value="#{bean.dataInicial}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" locale="#{locales.currentLocale}" />
+						</h:outputText>
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>
+					
+				<p:column sortBy="#{bean.dataFinal}">
+					<f:facet name="header">#{messages['evento.label.dataFinal']}</f:facet>
+					<h:commandLink action="#{eventoListMB.getNextView}" actionListener="#{eventoListMB.clear}">
+						<h:outputText value="#{bean.dataFinal}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" locale="#{locales.currentLocale}" />
+						</h:outputText>
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>
+				
+				<p:column sortBy="#{bean.responsavel}">
+					<f:facet name="header">#{"Responsável"} / #{"Ministério"}</f:facet>
+					<h:commandLink action="#{eventoListMB.getNextView}" actionListener="#{eventoListMB.clear}">
+						<h:outputText value="#{bean.responsavel.nome} / #{bean.responsavel.ministerio.descricao}" />
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>							
+					
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

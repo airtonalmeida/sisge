@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:form>
+		<p:menubar>
+			<p:submenu label="#{messages['menu.controleDespezas']}">
+				<p:menuitem value="#{messages['menu.menuitem.new']}" url="/controleDespezas_edit.jsf"></p:menuitem>
+				<p:menuitem value="#{messages['menu.menuitem.list']}" url="/controleDespezas_list.jsf"></p:menuitem>
+			</p:submenu>
+
+			<p:submenu label="#{messages['menu.evento']}">
+				<p:menuitem value="#{messages['menu.menuitem.new']}" url="/evento_edit.jsf"></p:menuitem>
+				<p:menuitem value="#{messages['menu.menuitem.list']}" url="/evento_list.jsf"></p:menuitem>
+			</p:submenu>
+
+			<p:submenu label="Responsáveis">
+				<p:menuitem value="#{messages['menu.menuitem.new']}" url="/responsavel_edit.jsf"></p:menuitem>
+				<p:menuitem value="#{messages['menu.menuitem.list']}" url="/responsavel_list.jsf"></p:menuitem>
+			</p:submenu>
+
+			
+			<p:submenu label="#{messages['menu.base']}">
+				<p:menuitem value="#{messages['menu.menuitem.new']}" url="/base_edit.jsf"></p:menuitem>
+				<p:menuitem value="#{messages['menu.menuitem.list']}" url="/base_list.jsf"></p:menuitem>
+			</p:submenu>
+
+			<p:submenu label="Ministérios">
+				<p:menuitem value="#{messages['menu.menuitem.new']}" url="/ministerio_edit.jsf"></p:menuitem>
+				<p:menuitem value="#{messages['menu.menuitem.list']}" url="/ministerio_list.jsf"></p:menuitem>
+			</p:submenu>
+			
+		</p:menubar>
+	</h:form>
+
+</ui:composition>

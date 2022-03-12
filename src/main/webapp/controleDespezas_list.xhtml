@@ -1,0 +1,61 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets" template="/template/main.xhtml">
+
+	<ui:define name="body">
+		<h:form>
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton title="#{messages['button.new']}" icon="ui-icon-document" action="#{controleDespezasListMB.getNextView}"
+						actionListener="#{controleDespezasListMB.clear}" ajax="false" />
+
+					<p:commandButton title="#{messages['button.delete']}" icon="ui-icon-trash" onclick="PF('confirmation').show();"
+						type="button" immediate="true" ajax="false" />
+
+					<p:confirmDialog message="#{messages['label.confirm.delete']}" 
+						header="#{messages['label.dialog.alert']}!" severity="alert" widgetVar="confirmation">
+
+						<h:commandButton value="#{messages['button.dialog.yes']}" action="#{controleDespezasListMB.deleteSelection}"
+							actionListener="#{controleDespezasListMB.clear}" />
+						<h:commandButton value="#{messages['button.dialog.no']}" onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable id="list" var="bean" value="#{controleDespezasListMB.resultList}" emptyMessage=" ">
+				<f:facet name="header">#{messages['controleDespezas.list.table.title']}</f:facet>
+				<p:column style="width:2%;">
+					<h:selectBooleanCheckbox value="#{controleDespezasListMB.selection[bean.id]}"></h:selectBooleanCheckbox>
+				</p:column>
+				
+				<p:column sortBy="#{bean.id}">
+					<f:facet name="header">#{"Evento"}</f:facet>
+					<h:commandLink action="#{controleDespezasListMB.getNextView}" actionListener="#{controleDespezasListMB.clear}">
+					<h:outputText value="#{bean.evento.descricao}" />
+					<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>
+				
+				<p:column  sortBy="#{bean.id}">
+					<f:facet name="header">#{messages['evento.label.abreviatura']}</f:facet>
+					<h:commandLink action="#{controleDespezasListMB.getNextView}" actionListener="#{controleDespezasListMB.clear}">
+					<h:outputText value="#{bean.evento.abreviatura}" />
+					<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>
+				
+				<p:column  sortBy="#{bean.id}">
+					<f:facet name="header">#{messages['evento.label.dataInicial']}</f:facet>
+					<h:commandLink action="#{controleDespezasListMB.getNextView}" actionListener="#{controleDespezasListMB.clear}">
+					<h:outputText value="#{bean.evento.dataInicial}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" locale="#{locales.currentLocale}" />
+					</h:outputText>
+					<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>
+						
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

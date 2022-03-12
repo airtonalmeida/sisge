@@ -1,0 +1,53 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets" template="/template/main.xhtml">
+
+	<ui:define name="body">
+		<h:form prependId="false">
+			
+			<p:fieldset legend="Ministério" toggleable="true" toggleSpeed="500">
+				<h:panelGrid id="fieldsministerio" columns="3">
+										
+					<h:outputLabel value="#{messages['ministerio.label.descricao']}: " for="descricao" styleClass="text-input" />
+					
+					<h:inputText id="descricao" value="#{ministerioEditMB.bean.descricao}"
+						title="#{messages['ministerio.alt.descricao']}" />
+					
+					<p:message for="descricao" />
+						
+					<h:outputLabel value="#{messages['base.label']}: " for="base" styleClass="text-input" />
+				    <p:selectOneMenu id="base" value="#{ministerioEditMB.bean.base}"  effect="fade" converter="ConversorBase" >
+						<f:selectItem itemLabel="Selecione" itemValue="" />
+						<f:selectItems value="#{ministerioEditMB.baseList}" var="varBase" itemLabel="#{varBase.descricao}"  itemValue="#{varBase}" />						
+					</p:selectOneMenu>
+					<p:message for="base" />								  
+								 
+				</h:panelGrid>
+			</p:fieldset>
+			
+			<br />
+			
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{messages['button.save']}" action="#{ministerioEditMB.insert}"
+						rendered="#{!ministerioEditMB.updateMode}" ajax="false" />
+					<p:commandButton value="#{messages['button.save']}" action="#{ministerioEditMB.update}"
+						rendered="#{ministerioEditMB.updateMode}" ajax="false" />
+					<p:commandButton value="#{messages['button.delete']}" onclick="PF('confirmation').show()"
+						rendered="#{ministerioEditMB.updateMode}" type="button" immediate="true" ajax="false" />
+					<p:confirmDialog message="#{messages['label.confirm.delete']}" showEffect="bounce" hideEffect="explode"
+						header="#{messages['label.dialog.delete']}" severity="alert" widgetVar="confirmation">
+						<h:commandButton value="#{messages['button.dialog.yes']}" action="#{ministerioEditMB.delete}" immediate="true"
+							ajax="false" />
+						<h:commandButton value="#{messages['button.dialog.no']}" onclick="PF('confirmation').hide();" type="button" />
+					</p:confirmDialog>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			
+			
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

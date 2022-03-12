@@ -1,0 +1,98 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets" template="/template/main.xhtml">
+
+	<ui:define name="body">
+		<h:form prependId="false">
+			
+
+			<p:fieldset legend="Responsável" toggleable="true" toggleSpeed="500">
+				<h:panelGrid id="fieldsresponsavel" columns="3">
+										
+					<h:outputLabel value="#{messages['responsavel.label.nome']}: " for="nome" styleClass="text-input" />
+					
+					<h:inputText id="nome" value="#{responsavelEditMB.bean.nome}"
+						title="#{messages['responsavel.alt.nome']}" />
+					
+					<p:message for="nome" />
+					
+					<h:outputLabel value="#{messages['base.label']}: " for="base" styleClass="text-input" />
+					
+					 <p:selectOneMenu id="base" value="#{responsavelEditMB.bean.base}"   converter="ConversorBase">
+						<f:selectItem itemLabel="Selecione" itemValue="" />
+						<f:selectItems value="#{responsavelEditMB.baseList}" var="base" itemLabel="#{base.descricao}"  itemValue="#{base}" />	
+						<p:ajax update="ministerio"
+                        listener="#{responsavelEditMB.atualizaMinisterio}" />					
+					</p:selectOneMenu>
+					
+					<p:message for="base" />	
+					
+					<h:outputLabel value="Ministério: " for="ministerio" styleClass="text-input" />
+					
+					 <p:selectOneMenu id="ministerio" value="#{responsavelEditMB.bean.ministerio}"   converter="ConversorMinisterio">
+						<f:selectItem itemLabel="Selecione" itemValue="" />
+						<f:selectItems value="#{responsavelEditMB.ministeriosList}" var="ministerio" itemLabel="#{ministerio.descricao}"  itemValue="#{ministerio}" />						
+					</p:selectOneMenu>
+					
+					<p:message for="ministerio" />	
+						
+					<h:outputLabel value="#{messages['responsavel.label.dataNascimento']}: " for="dataNascimento" styleClass="text-input" />
+					
+					<p:calendar id="dataNascimento" value="#{responsavelEditMB.bean.dataNascimento}" pattern="dd/MM/yyyy" mask="true" showOn="button"/>						 
+					
+					<p:message for="dataNascimento" />
+					
+											
+					<h:outputLabel value="#{messages['sexo.label']}: " for="sexo" styleClass="text-input" />
+										
+					 <p:selectOneMenu id="sexo" value="#{responsavelEditMB.bean.sexo}"  effect="fade" converter="ConversorSexo">
+						<f:selectItem itemLabel="Selecione" itemValue="" />
+						<f:selectItems value="#{responsavelEditMB.sexoList}" var="varSexo" itemLabel="#{varSexo.descricao}"  itemValue="#{varSexo}" />						
+					</p:selectOneMenu>
+					
+					<p:message for="sexo" />	
+				
+										
+					<h:outputLabel value="#{messages['responsavel.label.telefone']}: " for="telefone" styleClass="text-input" />
+					
+					<h:inputText id="telefone" value="#{responsavelEditMB.bean.telefone}"
+						title="#{messages['responsavel.alt.telefone']}" />
+					
+					<p:message for="telefone" />
+						
+					<h:outputLabel value="#{messages['responsavel.label.celular']}: " for="celular" styleClass="text-input" />
+					
+					<h:inputText id="celular" value="#{responsavelEditMB.bean.celular}"
+						title="#{messages['responsavel.alt.celular']}" />
+					
+					<p:message for="celular" />
+				 						  
+								 
+				</h:panelGrid>
+			</p:fieldset>
+			
+			<br />
+			
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{messages['button.save']}" action="#{responsavelEditMB.insert}"
+						rendered="#{!responsavelEditMB.updateMode}" ajax="false" />
+					<p:commandButton value="#{messages['button.save']}" action="#{responsavelEditMB.update}"
+						rendered="#{responsavelEditMB.updateMode}" ajax="false" />
+					<p:commandButton value="#{messages['button.delete']}" onclick="PF('confirmation').show()"
+						rendered="#{responsavelEditMB.updateMode}" type="button" immediate="true" ajax="false" />
+					<p:confirmDialog message="#{messages['label.confirm.delete']}" showEffect="bounce" hideEffect="explode"
+						header="#{messages['label.dialog.delete']}" severity="alert" widgetVar="confirmation">
+						<h:commandButton value="#{messages['button.dialog.yes']}" action="#{responsavelEditMB.delete}" immediate="true"
+							ajax="false" />
+						<h:commandButton value="#{messages['button.dialog.no']}" onclick="PF('confirmation').hide();" type="button" />
+					</p:confirmDialog>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

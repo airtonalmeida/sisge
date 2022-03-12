@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: usuario
+Build-Jdk: 1.8.0_73
+Implementation-Title: 
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: br.org.ibmi
+Implementation-Vendor: SERPRO - Serviço Federal de Processamento de Da
+ dos
+Created-By: Maven Integration for Eclipse
+

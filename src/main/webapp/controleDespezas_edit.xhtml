@@ -1,0 +1,463 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/template/main.xhtml">
+
+	<ui:define name="body">
+		<h:form id="form1" prependId="false">
+
+			<p:fieldset legend="#{messages['controleDespezas.label']}"
+				toggleable="true" toggleSpeed="500">
+				<h:panelGrid id="fieldscontroleDespezas" columns="3">
+
+					<h:outputLabel value="#{messages['evento.label']}: " for="evento"
+						styleClass="text-input" />
+					<p:selectOneMenu id="evento"
+						value="#{controleDespezasEditMB.bean.evento}" effect="fade"
+						converter="ConversorEvento">
+						<f:selectItem itemLabel="Selecione" itemValue="" />
+						<f:selectItems value="#{controleDespezasEditMB.eventoList}"
+							var="varEvento" itemLabel="#{varEvento.descricao}"
+							itemValue="#{varEvento}" />
+						<p:ajax event="change"
+							update=":form1:valorEstimadoEvento,:form1:percentual,:form1:barra"
+							listener="#{controleDespezasEditMB.calculaPercentual}" />
+					</p:selectOneMenu>
+					<p:message for="evento" />
+
+				</h:panelGrid>
+
+				<h:panelGrid id="fieldsValorEstimadoEvento" columns="3">
+
+					<h:outputLabel value="Valor Estimado: " for="valorEstimadoEvento"
+						styleClass="text-input" />
+
+					<p:outputLabel id="valorEstimadoEvento"
+						value="#{controleDespezasEditMB.bean.evento.custoEstimado}"
+						styleClass="text-input" />
+
+					<p:message for="valorEstimadoEvento" />
+
+				</h:panelGrid>
+
+				<h:panelGrid id="fieldscontroleDespezasValorTotal" columns="4">
+
+					<h:outputLabel value="Valor Total Atual: " for="valorTotalAtual"
+						styleClass="text-input" />
+
+					<p:outputLabel id="valorTotalAtual"
+						value="#{controleDespezasEditMB.bean.valorTotalAtual}  "
+						styleClass="text-input" />
+
+					<p:outputLabel id="percentual"
+						value="(#{controleDespezasEditMB.bean.percentual}% do valor estimado para o evento)"
+						styleClass="text-input" />
+
+					<p:message for="valorTotalAtual" />
+
+				</h:panelGrid>
+
+				<br />
+
+				<p:fieldset legend="#{messages['material.label']}" toggleable="true"
+					toggleSpeed="500">
+					<h:panelGrid id="fieldsmaterial" columns="1">
+
+						<p:dataTable id="listMaterial" var="material"
+							value="#{controleDespezasEditMB.materialList}"
+							rowIndexVar="index" emptyMessage=" ">
+
+							<p:column width="35%">
+								<h:outputLabel value="Descrição: " for="descricao"
+									styleClass="text-input" />
+
+								<h:inputText id="descricao" value="#{material.descricao}"
+									title="Descrição" size="50" />
+
+								<p:message for="descricao" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel
+									value="#{messages['material.label.quantidade']}: "
+									for="quantidade" styleClass="text-input" />
+
+								<h:inputText id="quantidade" value="#{material.quantidade}"
+									title="#{messages['material.alt.quantidade']}" />
+
+								<p:message for="quantidade" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel
+									value="#{messages['material.label.valor']} (R$): " for="valor"
+									styleClass="text-input" />
+
+								<p:inputText id="valor" value="#{material.valor}"
+									required="true" title="#{messages['material.alt.valor']}">
+									<p:ajax event="blur"
+										update=":form1:valorTotalMateriais,:form1:valorTotalAtual,:form1:percentual,:form1:barra
+										,:form1:percentualMaterial"
+										listener="#{controleDespezasEditMB.calculaValorTotalMateriais}" />
+								</p:inputText>
+								<p:message for="valor" />
+							</p:column>
+
+							<p:column width="20%">
+								<h:outputLabel
+									value="#{messages['material.label.dataCompra']}: "
+									for="dataCompra" styleClass="text-input" />
+
+								<p:calendar id="dataCompra" value="#{material.dataCompra}"
+									pattern="#{messages['label.date.pattern']}" navigator="true"
+									showButtonPanel="true" locale="#{locales.currentLocale}"
+									title="#{messages['material.alt.dataCompra']}" />
+
+								<p:message for="dataCompra" />
+							</p:column>
+
+							<p:column width="15%">
+								<f:facet name="header">#{messages['label.action']}</f:facet>
+								<p:commandButton value="#{messages['button.delete']}"
+									action="#{controleDespezasEditMB.deleteMaterial}" ajax="false" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:toolbar>
+							<f:facet name="right">
+								<p:commandButton value="#{messages['button.new']}"
+									action="#{controleDespezasEditMB.addMaterial}"
+									update="listMaterial">
+
+								</p:commandButton>
+							</f:facet>
+						</p:toolbar>
+					</h:panelGrid>
+
+					<h:outputLabel value="Valor Total dos Materiais: "
+						for="valorTotalMateriais" styleClass="text-input" />
+
+					<p:outputLabel id="valorTotalMateriais"
+						value="#{controleDespezasEditMB.bean.valorTotalMateriais} "
+						styleClass="text-input" />
+
+					<p:outputLabel id="percentualMaterial"
+						value="(#{controleDespezasEditMB.bean.percentualMaterial}% do valor estimado para o evento)"
+						styleClass="text-input" />
+
+				</p:fieldset>
+
+
+				<br />
+
+				<br />
+
+				<p:fieldset legend="#{messages['hospedagem.label']}"
+					toggleable="true" toggleSpeed="500">
+					<h:panelGrid id="fieldshospedagem" columns="1">
+
+						<p:dataTable id="listHospedagem" var="hospedagem"
+							value="#{controleDespezasEditMB.hospedagemList}"
+							rowIndexVar="index" emptyMessage=" ">
+
+							<p:column width="35%">
+								<h:outputLabel value="Descrição: " for="descricao"
+									styleClass="text-input" />
+
+								<h:inputText id="descricao" value="#{hospedagem.descricao}"
+									title="Descrição" size="50" />
+
+								<p:message for="descricao" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel value="Número da Fatura: " for="numFatura"
+									styleClass="text-input" />
+
+								<h:inputText id="numFatura" value="#{hospedagem.numFatura}"
+									title="#{messages['hospedagem.alt.numFatura']}" />
+
+								<p:message for="numFatura" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel
+									value="#{messages['hospedagem.label.valor']} (R$): "
+									for="valor" styleClass="text-input" />
+
+								<p:inputText id="valor" value="#{hospedagem.valor}"
+									required="true" title="#{messages['hospedagem.alt.valor']}">
+									<p:ajax event="blur"
+										update=":form1:valorTotalHospedagens,:form1:valorTotalAtual,:form1:percentual,:form1:barra
+									,:form1:percentualHospedagem"
+										listener="#{controleDespezasEditMB.calculaValorTotalHospedagens}" />
+								</p:inputText>
+								<p:message for="valor" />
+							</p:column>
+
+							<p:column width="20%">
+								<h:outputLabel
+									value="#{messages['hospedagem.label.dataPagamento']}: "
+									for="dataPagamento" styleClass="text-input" />
+
+								<p:calendar id="dataPagamento"
+									value="#{hospedagem.dataPagamento}"
+									pattern="#{messages['label.date.pattern']}" navigator="true"
+									showButtonPanel="true" locale="#{locales.currentLocale}"
+									title="#{messages['hospedagem.alt.dataPagamento']}" />
+
+								<p:message for="dataPagamento" />
+							</p:column>
+
+							<p:column width="15%">
+								<f:facet name="header">#{messages['label.action']}</f:facet>
+								<p:commandButton value="#{messages['button.delete']}"
+									action="#{controleDespezasEditMB.deleteHospedagem}"
+									ajax="false" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:toolbar>
+							<f:facet name="right">
+								<p:commandButton value="#{messages['button.new']}"
+									action="#{controleDespezasEditMB.addHospedagem}"
+									update="listHospedagem">
+
+								</p:commandButton>
+							</f:facet>
+						</p:toolbar>
+					</h:panelGrid>
+
+					<h:outputLabel value="Valor Total das Hospedagens: "
+						for="valorTotalHospedagens" styleClass="text-input" />
+
+					<p:outputLabel id="valorTotalHospedagens"
+						value="#{controleDespezasEditMB.bean.valorTotalHospedagens} "
+						styleClass="text-input" />
+
+					<p:outputLabel id="percentualHospedagem"
+						value="(#{controleDespezasEditMB.bean.percentualHospedagem}% do valor estimado para o evento)"
+						styleClass="text-input" />
+
+				</p:fieldset>
+
+				<br />
+
+				<br />
+
+				<p:fieldset legend="Serviço" toggleable="true" toggleSpeed="500">
+					<h:panelGrid id="fieldsservico" columns="1">
+
+						<p:dataTable id="listServico" var="servico"
+							value="#{controleDespezasEditMB.servicoList}" rowIndexVar="index"
+							emptyMessage=" ">
+
+							<p:column width="35%">
+								<h:outputLabel value="Descrição: " for="descricao"
+									styleClass="text-input" />
+
+								<h:inputText id="descricao" value="#{servico.descricao}"
+									title="Descrição" size="50" />
+
+								<p:message for="descricao" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel value="#{messages['servico.label.prestador']}: "
+									for="prestador" styleClass="text-input" />
+
+								<h:inputText id="prestador" value="#{servico.prestador}"
+									title="#{messages['servico.alt.prestador']}" />
+
+								<p:message for="prestador" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel value="#{messages['servico.label.valor']} (R$): "
+									for="valor" styleClass="text-input" />
+
+								<p:inputText id="valor" value="#{servico.valor}" required="true"
+									title="#{messages['servico.alt.valor']}">
+									<p:ajax event="blur"
+										update=":form1:valorTotalServicos,:form1:valorTotalAtual,:form1:percentual,:form1:barra
+									,:form1:percentualServico"
+										listener="#{controleDespezasEditMB.calculaValorTotalServicos}" />
+								</p:inputText>
+								<p:message for="valor" />
+							</p:column>
+
+							<p:column width="20%">
+								<h:outputLabel value="#{messages['servico.label.data']}: "
+									for="dataPagamento" styleClass="text-input" />
+
+								<p:calendar id="data" value="#{servico.data}"
+									pattern="#{messages['label.date.pattern']}" navigator="true"
+									showButtonPanel="true" locale="#{locales.currentLocale}"
+									title="#{messages['servico.alt.data']}" />
+
+								<p:message for="data" />
+							</p:column>
+
+							<p:column width="15%">
+								<f:facet name="header">#{messages['label.action']}</f:facet>
+								<p:commandButton value="#{messages['button.delete']}"
+									action="#{controleDespezasEditMB.deleteServico}" ajax="false" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:toolbar>
+							<f:facet name="right">
+								<p:commandButton value="#{messages['button.new']}"
+									action="#{controleDespezasEditMB.addServico}"
+									update="listServico">
+
+								</p:commandButton>
+							</f:facet>
+						</p:toolbar>
+					</h:panelGrid>
+
+					<h:outputLabel value="Valor Total dos Serviços: "
+						for="valorTotalServicos" styleClass="text-input" />
+
+					<p:outputLabel id="valorTotalServicos"
+						value="#{controleDespezasEditMB.bean.valorTotalServicos} "
+						styleClass="text-input" />
+
+					<p:outputLabel id="percentualServico"
+						value="(#{controleDespezasEditMB.bean.percentualServico}% do valor estimado para o evento)"
+						styleClass="text-input" />
+
+				</p:fieldset>
+
+				<br />
+
+				<br />
+
+				<p:fieldset legend="Transporte" toggleable="true" toggleSpeed="500">
+					<h:panelGrid id="fieldstransporte" columns="1">
+
+						<p:dataTable id="listTransporte" var="transporte"
+							value="#{controleDespezasEditMB.transporteList}"
+							rowIndexVar="index" emptyMessage=" ">
+
+							<p:column width="35%">
+								<h:outputLabel value="Descrição: " for="descricao"
+									styleClass="text-input" />
+
+								<h:inputText id="descricao" value="#{transporte.descricao}"
+									title="Descrição" size="50" />
+
+								<p:message for="descricao" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel
+									value="#{messages['transporte.label.origemDestino']}: "
+									for="origemDestino" styleClass="text-input" />
+
+								<h:inputText id="origemDestino"
+									value="#{transporte.origemDestino}"
+									title="#{messages['transporte.alt.origemDestino']}" />
+
+								<p:message for="origemDestino" />
+							</p:column>
+
+							<p:column width="15%">
+								<h:outputLabel
+									value="#{messages['transporte.label.valor']} (R$): "
+									for="valor" styleClass="text-input" />
+
+								<p:inputText id="valor" value="#{transporte.valor}"
+									required="true" title="#{messages['transporte.alt.valor']}">
+									<p:ajax event="blur"
+										update=":form1:valorTotalTransportes,:form1:valorTotalAtual,:form1:percentual,:form1:barra
+									,:form1:percentualTransporte"
+										listener="#{controleDespezasEditMB.calculaValorTotalTransportes}" />
+								</p:inputText>
+								<p:message for="valor" />
+							</p:column>
+
+							<p:column width="20%">
+								<h:outputLabel value="#{messages['transporte.label.data']}: "
+									for="data" styleClass="text-input" />
+
+								<p:calendar id="data" value="#{transporte.data}"
+									pattern="#{messages['label.date.pattern']}" navigator="true"
+									showButtonPanel="true" locale="#{locales.currentLocale}"
+									title="#{messages['transporte.alt.data']}" />
+
+								<p:message for="data" />
+							</p:column>
+
+							<p:column width="15%">
+								<f:facet name="header">#{messages['label.action']}</f:facet>
+								<p:commandButton value="#{messages['button.delete']}"
+									action="#{controleDespezasEditMB.deleteTransporte}"
+									ajax="false" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:toolbar>
+							<f:facet name="right">
+								<p:commandButton value="#{messages['button.new']}"
+									action="#{controleDespezasEditMB.addTransporte}"
+									update="listTransporte">
+
+								</p:commandButton>
+							</f:facet>
+						</p:toolbar>
+					</h:panelGrid>
+
+					<h:outputLabel value="Valor Total dos Transportes: "
+						for="valorTotalTransportes" styleClass="text-input" />
+
+					<p:outputLabel id="valorTotalTransportes"
+						value="#{controleDespezasEditMB.bean.valorTotalTransportes} "
+						styleClass="text-input" />
+
+					<p:outputLabel id="percentualTransporte"
+						value="(#{controleDespezasEditMB.bean.percentualTransporte}% do valor estimado para o evento)"
+						styleClass="text-input" />
+
+				</p:fieldset>
+			</p:fieldset>
+			<br />
+
+			<br />
+			
+			<p:toolbar>
+				<p:toolbarGroup align="center">
+					<p:chart id="barra" type="bar"
+						model="#{controleDespezasEditMB.graficoBarra}"
+						style="height:300px" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			
+			<br />
+
+			<br />
+
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{messages['button.save']}"
+						action="#{controleDespezasEditMB.insert}"
+						rendered="#{!controleDespezasEditMB.updateMode}" ajax="false" />
+					<p:commandButton value="#{messages['button.save']}"
+						action="#{controleDespezasEditMB.update}"
+						rendered="#{controleDespezasEditMB.updateMode}" ajax="false" />
+					
+				</p:toolbarGroup>
+			</p:toolbar>
+
+
+			
+		</h:form>
+	</ui:define>
+</ui:composition>
